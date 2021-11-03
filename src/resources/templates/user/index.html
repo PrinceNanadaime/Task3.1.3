@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>All users</title>
+    <style>
+        table th, table td {padding: 5px;}
+        .row  {
+            font-style: italic;
+        }
+        .even-row {
+            color: black;
+        }
+        .odd-row {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Users</h1>
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th>Id</th>
+        <th>Role</th>
+        <th>Password</th>
+    </tr>
+
+    <tr th:each="user, state : ${user}"
+        class="row" th:classappend="${state.odd} ? 'odd-row' : 'even-row'">
+        <td>
+            <a th:href="@{/user/{id}(id=${user.getId()})}"
+               th:text="${user.getUsername()}" >Name</a>
+        </td>
+        <td th:utext="${user.getSurname}">Surname</td>
+        <td th:utext="${user.getAge}">Age</td>
+        <td th:utext="${user.getEmail}">Email</td>
+        <td th:text="${user.getId()}">Id</td>
+        <td th:text="${user.toString()}">Role</td>
+        <td th:text="${user.getPassword()}">Password</td>
+    </tr>
+</table>
+
+<br/>
+<hr/>
+<a href="/user/new">Create new user</a>
+<br/>
+<a th:href="@{/logout}">Logout</a>
+</body>
+</html>

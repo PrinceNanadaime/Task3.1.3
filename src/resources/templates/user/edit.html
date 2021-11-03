@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org/">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update user</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/user/{id}(id=${user.getId()})}" th:object="${user}">
+  <label for="username">Enter name: </label>
+  <input type="text" th:field="*{username}" id="username"/>
+  <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name error</div>
+
+  <br/>
+
+  <label for="surname">Surname: </label>
+  <input name="surname" type="text" th:field="*{surname}" id="surname"/>
+  <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Surname error</div>
+
+  <br/>
+
+  <label for="age">Age: </label>
+  <input name="age" type="text" th:field="*{age}" id="age"/>
+  <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age error</div>
+
+  <br/>
+
+  <label for="email">Email: </label>
+  <input name="email" type="text" th:field="*{email}" id="email"/>
+  <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+
+  <br/>
+
+  <label for="password">Password: </label>
+  <input name="password" type="text" th:field="*{password}" id="password"/>
+  <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+
+  <br/>
+
+  <input type="checkbox"  th:id="2" name="ADMIN" value="ADMIN">ADMIN</p>
+  <input type="checkbox"  th:id="1"  name="USER" value="USER">USER</p>
+
+
+  <br/>
+  <input type="submit" value="Create"/>
+</form>
+
+</body>
+</html>
