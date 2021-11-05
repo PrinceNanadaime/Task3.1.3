@@ -1,5 +1,6 @@
 package web.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
 
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
-        this.userDao = userDao;
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     public List<User> getUsers() {

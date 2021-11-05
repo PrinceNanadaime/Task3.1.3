@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import web.models.Role;
 import web.models.User;
 import web.service.RoleService;
 import web.service.UserService;
@@ -16,8 +17,8 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UsersController {
 
-    private final UserService userService;
-    private final RoleService roleService;
+    private UserService userService;
+    private RoleService roleService;
 
     public UsersController(UserService userService, RoleService roleService) {
         this.userService = userService;
@@ -25,46 +26,72 @@ public class UsersController {
     }
 
     @GetMapping()
-    public String getUsers(Model model) {
+    public String index(Model model) {
         model.addAttribute("user", userService.getUsers());
         return "user/index";
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model, @AuthenticationPrincipal User user) {
+    public String show(@PathVariable("id") long id, Model model) {
         model.addAttribute("user", userService.show(id));
-        model.addAttribute("roles", user.getRoles());
+        model.addAttribute("roles", userService.show(id).getRoles());
         return "user/show";
     }
 
-    @PostMapping("/new")
+    @GetMapping("/new")
     public String newUser(@ModelAttribute User user, Model model) {
         model.addAttribute("roles", roleService.getRoles());
         return "user/new";
     }
 
+    @PostMapping
+    public String create(@RequestParam(value = "ADMIN", required = false) String ADMIN,
+                         @RequestParam(value = "USER", required = false) String USER, @ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "user/new";
 
-    @PatchMapping("/{id}/edit")
+        if (ADMIN != null && USER != null) {
+            user.setRoles(Set.of(roleService.getRoleByName("USER"), roleService.getRoleByName("ADMIN")));
+        } else if (USER != null) {
+            user.setRoles(Set.of(roleService.getRoleByName("USER")));
+        } else if (ADMIN != null) {
+            user.setRoles(Set.of(roleService.getRoleByName("ADMIN")));
+        } else user.setRoles(Set.of(roleService.getRoleByName("USER")));
+        userService.save(user);
+        return "redirect:/user";
+    }
+
+    @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") long id) {
-        model.addAttribute("user", userService.show(id));
+        User user = userService.show(id);
+        model.addAttribute("user", user);
         model.addAttribute("roles", roleService.getRoles());
+        userService.update(user);
         return "user/edit";
     }
 
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult,
-                         @RequestParam(value = "id") long id) {
+                         @RequestParam(value = "ADMIN", required = false) String ADMIN,
+                         @RequestParam(value = "USER", required = false) String USER) {
+        if (bindingResult.hasErrors())
+            return "user/new";
 
-        user.setRoles(Set.of(roleService.getRoleById(id)));
+        if (ADMIN != null && USER != null) {
+            user.setRoles(Set.of(roleService.getRoleByName("USER"), roleService.getRoleByName("ADMIN")));
+        } else if (USER != null) {
+            user.setRoles(Set.of(roleService.getRoleByName("USER")));
+        } else if (ADMIN != null) {
+            user.setRoles(Set.of(roleService.getRoleByName("ADMIN")));
+        } else user.setRoles(Set.of(roleService.getRoleByName("USER")));
         userService.update(user);
-        return bindingResult.hasErrors() ? "user/new" : "redirect:/user";
+        return "redirect:/user";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         userService.delete(id);
         return "redirect:/user";
-
     }
 }

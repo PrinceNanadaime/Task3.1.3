@@ -1,16 +1,12 @@
 package web.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import web.dao.RoleDaoImpl;
-import web.dao.UserDaoImpl;
 import web.models.Role;
 import web.models.User;
 import web.service.RoleService;
-import web.service.RoleServiceImpl;
 import web.service.UserService;
-import web.service.UserServiceImpl;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
@@ -19,9 +15,18 @@ import java.util.Set;
 @ComponentScan("web")
 public class Init {
 
-    private final UserService userService = new UserServiceImpl(new UserDaoImpl(),new BCryptPasswordEncoder());
+    private UserService userService;
+    private RoleService roleService;
 
-    private final RoleService roleService= new RoleServiceImpl(new RoleDaoImpl());
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @PostConstruct
     public void addAdminAndUserToDataBase(){
@@ -31,6 +36,7 @@ public class Init {
         User user = new User();
         user.setName("Marc");
         user.setSurname("Hudson");
+        user.setAge(28);
         user.setUsername("marc_hudson");
         user.setPassword("marc1987");
         user.setRoles(Set.of(roleService.getRoleByName("USER")));
@@ -40,6 +46,7 @@ public class Init {
         admin.setName("Nikita");
         admin.setSurname("Kotenkov");
         admin.setUsername("nikita_kotenkov");
+        admin.setAge(19);
         admin.setPassword("nikita2001");
         admin.setRoles(Set.of(roleService.getRoleByName("ADMIN"), roleService.getRoleByName("USER")));
         userService.save(admin);

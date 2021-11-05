@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org/">
 <head>
   <meta charset="UTF-8" />
   <title>Loop</title>
@@ -25,16 +25,16 @@
     <th>Name</th>
     <th>Surname</th>
     <th>Age</th>
-    <th>Email</th>
+    <th>Username</th>
     <th>Id</th>
     <th>Role</th>
     <th>Password</th>
 
   </tr>
-  <td th:text="${user.getUsername()}">VALUE</td>
+  <td th:text="${user.getName()}">VALUE</td>
   <td th:text="${user.getSurname()}">VALUE</td>
   <td th:text="${user.getAge()}">VALUE</td>
-  <td th:text="${user.getEmail()}">VALUE</td>
+  <td th:text="${user.getUsername()}">VALUE</td>
   <td th:text="${user.getId()}">VALUE</td>
   <td th:each="role: ${roles}"><p th:text="${role.name}"></p></td>
   <td th:text="${user.getPassword()}">VALUE</td>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8" />
     <title>All users</title>
@@ -25,7 +25,7 @@
         <th>Name</th>
         <th>Surname</th>
         <th>Age</th>
-        <th>Email</th>
+        <th>Username</th>
         <th>Id</th>
         <th>Role</th>
         <th>Password</th>
@@ -35,13 +35,13 @@
         class="row" th:classappend="${state.odd} ? 'odd-row' : 'even-row'">
         <td>
             <a th:href="@{/user/{id}(id=${user.getId()})}"
-               th:text="${user.getUsername()}" >Name</a>
+               th:text="${user.getName()}" >Name</a>
         </td>
         <td th:utext="${user.getSurname}">Surname</td>
         <td th:utext="${user.getAge}">Age</td>
-        <td th:utext="${user.getEmail}">Email</td>
+        <td th:utext="${user.getUsername}">Username</td>
         <td th:text="${user.getId()}">Id</td>
-        <td th:text="${user.toString()}">Role</td>
+        <td th:text="${user.getRoles()}">Roles</td>
         <td th:text="${user.getPassword()}">Password</td>
     </tr>
 </table>

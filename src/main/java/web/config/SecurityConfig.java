@@ -1,5 +1,6 @@
 package web.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,16 +12,28 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import web.config.handler.LoginSuccessHandler;
+import web.service.RoleService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+    private LoginSuccessHandler loginSuccessHandler;
+    private RoleService roleService;
 
-    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+    @Autowired
+    public void setUserDetailsService(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+    LoginSuccessHandler loginSuccessHandler) {
+        this.loginSuccessHandler = loginSuccessHandler;
         this.userDetailsService = userDetailsService;
     }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -33,8 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/", "/login", "/logout").permitAll() // доступность всем
-                .antMatchers("/user/**").access("hasAnyRole('ADMIN')") // разрешаем входить на /user пользователям с ролью User, Admin
-                .antMatchers("/client").access("hasAnyRole('USER')")
+                .antMatchers("/user/**").hasAuthority("ADMIN") // разрешаем входить на /user пользователям с ролью Admin
+                .antMatchers("/client").hasAuthority("USER")
                 .and()
                 .formLogin()  // Spring сам подставит свою логин форму
                 .successHandler(new LoginSuccessHandler()) // подключаем наш SuccessHandler для перенаправления по ролям
