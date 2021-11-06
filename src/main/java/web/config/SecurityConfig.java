@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import web.config.handler.LoginSuccessHandler;
-import web.service.RoleService;
 
 @Configuration
 @EnableWebSecurity
@@ -20,18 +19,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
     private LoginSuccessHandler loginSuccessHandler;
-    private RoleService roleService;
 
     @Autowired
     public void setUserDetailsService(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
     LoginSuccessHandler loginSuccessHandler) {
         this.loginSuccessHandler = loginSuccessHandler;
         this.userDetailsService = userDetailsService;
-    }
-
-    @Autowired
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
     }
 
     @Bean
@@ -50,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/client").hasAuthority("USER")
                 .and()
                 .formLogin()  // Spring сам подставит свою логин форму
-                .successHandler(new LoginSuccessHandler()) // подключаем наш SuccessHandler для перенаправления по ролям
+                .successHandler(loginSuccessHandler) // подключаем наш SuccessHandler для перенаправления по ролям
                 .and().logout()
                 .logoutUrl("/logout") //URL-адрес, запускающий выход из системы (по умолчанию "/ logout").
                 .logoutSuccessUrl("/login") //URL-адрес для перенаправления после выхода из системы.
