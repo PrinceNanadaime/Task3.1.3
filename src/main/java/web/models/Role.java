@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,5 +32,9 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return getName();
+    }
+    @Override
+    public String toString(){
+        return name;
     }
 }

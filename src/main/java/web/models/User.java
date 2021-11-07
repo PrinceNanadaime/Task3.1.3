@@ -1,5 +1,6 @@
 package web.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
@@ -46,6 +46,15 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (Role role : roles){
+            s.append(role.toString()).append(" ");
+        }
+        return s.toString();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
