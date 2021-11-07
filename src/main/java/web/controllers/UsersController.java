@@ -45,10 +45,17 @@ public class UsersController {
         return  "redirect:/user";
     }
 
-    @GetMapping("/show/{id}")
-    @ResponseBody
-    public User show(@PathVariable("id") long id) {
-        return userService.show(id);
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute @Valid User user, @RequestParam(value = "checkRoles", required = false) String[] checkRoles) {
+        if(checkRoles == null) {
+            user.setRoles(Set.of(roleService.getRoleByName("USER")));
+        } else {
+            for (String role : checkRoles) {
+                user.setRoles(Set.of(roleService.getRoleByName(role)));
+            }
+        }
+        userService.update(user);
+        return  "redirect:/user";
     }
 
     @DeleteMapping("/{id}")
