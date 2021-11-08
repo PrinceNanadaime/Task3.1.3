@@ -1,8 +1,7 @@
 package web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import web.models.Role;
 import web.models.User;
 import web.service.RoleService;
@@ -11,8 +10,7 @@ import web.service.UserService;
 import javax.annotation.PostConstruct;
 import java.util.Set;
 
-@Configuration
-@ComponentScan("web")
+@Component
 public class Init {
 
     private UserService userService;

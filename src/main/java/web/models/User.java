@@ -38,10 +38,9 @@ public class User implements UserDetails {
     @Column
     @NotEmpty(message = "Username should not be empty")
     private String username;
-    @Column
+    @Column(name = "password")
     @NotEmpty(message = "Password should not be empty")
     private String password;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
@@ -50,7 +49,7 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        for (Role role : roles){
+        for (Role role : roles) {
             s.append(role.toString()).append(" ");
         }
         return s.toString();

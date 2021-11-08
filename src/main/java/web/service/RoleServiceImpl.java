@@ -27,10 +27,6 @@ public class RoleServiceImpl implements RoleService {
         roleDao.save(role);
     }
 
-    public Role getRoleById(long id) {
-        return roleDao.getRoleByID(id);
-    }
-
     public Role getRoleByName(String name) {
         return roleDao.getRoleByName(name);
     }

@@ -41,20 +41,21 @@ public class UsersController {
                 user.setRoles(Set.of(roleService.getRoleByName(role)));
             }
         }
-        userService.update(user);
+        userService.save(user);
         return  "redirect:/user";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute @Valid User user, @RequestParam(value = "checkRoles", required = false) String[] checkRoles) {
+    public String update(@ModelAttribute @Valid User user, @RequestParam("id") long id,
+                         @RequestParam(value = "checkRoles", required = false) String[] checkRoles) {
         if(checkRoles == null) {
-            user.setRoles(Set.of(roleService.getRoleByName("USER")));
+            user.setRoles(userService.show(id).getRoles());
         } else {
             for (String role : checkRoles) {
                 user.setRoles(Set.of(roleService.getRoleByName(role)));
             }
         }
-        userService.update(user);
+        userService.update(id,user);
         return  "redirect:/user";
     }
 
