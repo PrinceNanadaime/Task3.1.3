@@ -39,7 +39,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     public User getUserByName(String name) {
-        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.name=:name",
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.username=:name",
                 User.class).setParameter("name", name);
         return query.getSingleResult();
     }

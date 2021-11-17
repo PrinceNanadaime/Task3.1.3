@@ -32,19 +32,19 @@ public class Init {
         roleService.save(new Role("USER"));
 
         User user = new User();
-        user.setName("Marc");
+        user.setUsername("Marc");
         user.setSurname("Hudson");
         user.setAge(28);
-        user.setUsername("marc_hudson");
+        user.setEmail("marc@mail.ru");
         user.setPassword("marc1987");
         user.setRoles(Set.of(roleService.getRoleByName("USER")));
         userService.save(user);
 
         User admin = new User();
-        admin.setName("Nikita");
+        admin.setUsername("Nikita");
         admin.setSurname("Kotenkov");
-        admin.setUsername("nikita_kotenkov");
         admin.setAge(19);
+        admin.setEmail("nikita@mail.ru");
         admin.setPassword("nikita2001");
         admin.setRoles(Set.of(roleService.getRoleByName("ADMIN"), roleService.getRoleByName("USER")));
         userService.save(admin);

@@ -25,9 +25,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
-    private String name;
+    @NotEmpty(message = "Username should not be empty")
+    private String username;
     @Column
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
@@ -36,8 +35,9 @@ public class User implements UserDetails {
     @Min(value = 0, message = "Age should be greater then 0")
     private int age;
     @Column
-    @NotEmpty(message = "Username should not be empty")
-    private String username;
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    private String email;
     @Column(name = "password")
     @NotEmpty(message = "Password should not be empty")
     private String password;

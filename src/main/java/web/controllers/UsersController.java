@@ -1,5 +1,7 @@
 package web.controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,15 +10,12 @@ import web.models.User;
 import web.service.RoleService;
 import web.service.UserService;
 
-import javax.validation.Valid;
-import java.util.Set;
-
 @Controller
 @RequestMapping("/user")
 public class UsersController {
 
-    private final UserService userService;
-    private final RoleService roleService;
+    private UserService userService;
+    private RoleService roleService;
 
     public UsersController(UserService userService, RoleService roleService) {
         this.userService = userService;
@@ -24,44 +23,15 @@ public class UsersController {
     }
 
     @GetMapping()
-    public String getUsersAndRoles (Model model, @AuthenticationPrincipal User user) {
-        model.addAttribute("users", user);
-        model.addAttribute("roles", user.getRoles());
-        model.addAttribute("user", userService.getUsers());
-        model.addAttribute("allRoles", roleService.getRoles());
+    public String user (@AuthenticationPrincipal User user,Model model) {
+        model.addAttribute("user", user);
+        model.addAttribute("allRoles",roleService.getRoles());
         return "user/index";
     }
 
-    @PostMapping
-    public String create(@ModelAttribute @Valid User user, @RequestParam(value = "checkRoles", required = false) String[] checkRoles) {
-        if(checkRoles == null) {
-            user.setRoles(Set.of(roleService.getRoleByName("USER")));
-        } else {
-            for (String role : checkRoles) {
-                user.setRoles(Set.of(roleService.getRoleByName(role)));
-            }
-        }
-        userService.save(user);
-        return  "redirect:/user";
-    }
-
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute @Valid User user, @RequestParam("id") long id,
-                         @RequestParam(value = "checkRoles", required = false) String[] checkRoles) {
-        if(checkRoles == null) {
-            user.setRoles(userService.show(id).getRoles());
-        } else {
-            for (String role : checkRoles) {
-                user.setRoles(Set.of(roleService.getRoleByName(role)));
-            }
-        }
-        userService.update(id,user);
-        return  "redirect:/user";
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") long id) {
-        userService.delete(id);
-        return "redirect:/user";
+    @GetMapping("/userNav")
+    @ResponseBody
+    public ResponseEntity<User> currentUser(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userService.getUserByName(user.getUsername()), HttpStatus.OK) ;
     }
 }
